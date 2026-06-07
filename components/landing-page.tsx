@@ -1,8 +1,8 @@
 "use client";
 
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { FlodeskInlineForm } from "@/components/flodesk-inline-form";
 
 const faqs = [
   {
@@ -50,157 +50,70 @@ const processSteps = [
   "Get your customized digital marketing plan for FREE",
 ];
 
-type FormValues = {
-  fullName: string;
-  email: string;
-  whatsapp: string;
-  businessName: string;
-  website: string;
-  message: string;
-};
-
-type FormErrors = Partial<Record<keyof FormValues, string>>;
-
-const initialValues: FormValues = {
-  fullName: "",
-  email: "",
-  whatsapp: "",
-  businessName: "",
-  website: "",
-  message: "",
-};
-
 export function LandingPage() {
-  const router = useRouter();
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [values, setValues] = useState<FormValues>(initialValues);
-  const [errors, setErrors] = useState<FormErrors>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState("");
-
-  const validate = (formValues: FormValues) => {
-    const nextErrors: FormErrors = {};
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-    if (!formValues.fullName.trim()) {
-      nextErrors.fullName = "Please enter your full name.";
-    }
-
-    if (!formValues.email.trim()) {
-      nextErrors.email = "Please enter your email.";
-    } else if (!emailPattern.test(formValues.email)) {
-      nextErrors.email = "Please enter a valid email address.";
-    }
-
-    if (!formValues.whatsapp.trim()) {
-      nextErrors.whatsapp = "Please enter your WhatsApp number.";
-    }
-
-    if (!formValues.businessName.trim()) {
-      nextErrors.businessName = "Please enter your business name.";
-    }
-
-    if (!formValues.website.trim()) {
-      nextErrors.website = "Please enter your website or Facebook page link.";
-    }
-
-    return nextErrors;
-  };
-
-  const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = event.target;
-    setValues((current) => ({ ...current, [name]: value }));
-    setErrors((current) => ({ ...current, [name]: undefined }));
-  };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const nextErrors = validate(values);
-
-    if (Object.keys(nextErrors).length > 0) {
-      setErrors(nextErrors);
-      return;
-    }
-
-    setIsSubmitting(true);
-    setSubmitError("");
-
-    try {
-      const response = await fetch("/api/consultation", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(values),
-      });
-
-      const data = (await response.json()) as {
-        success?: boolean;
-        message?: string;
-      };
-
-      if (!response.ok || !data.success) {
-        setSubmitError(
-          data.message ?? "We could not submit your form right now.",
-        );
-        return;
-      }
-
-      router.push("/thanks");
-    } catch (error) {
-      console.error("Consultation form submission failed:", error);
-      setSubmitError("We could not submit your form right now.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
 
   return (
     <main className="overflow-hidden">
       <section className="px-4 pb-14 pt-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-6xl">
-          <header className="flex justify-center">
-            <div className="rounded-[1.75rem] border border-white/70 bg-white/80 px-6 py-4 shadow-[var(--shadow-soft)] backdrop-blur">
-              <Image
-                src="/logo.png"
-                alt="Marketing Uplift logo"
-                width={170}
-                height={170}
-                className="mx-auto h-auto w-[96px] sm:w-[112px]"
-                priority
-              />
-            </div>
-          </header>
-
-          <div className="relative mt-8 rounded-[2rem] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(247,252,255,0.94))] px-6 py-14 text-center shadow-[var(--shadow-strong)] sm:px-10 lg:px-16 lg:py-20">
+          <div className="relative rounded-[2rem] border border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.92),rgba(247,252,255,0.94))] px-6 py-14 text-center shadow-[var(--shadow-strong)] sm:px-10 lg:px-16 lg:py-20">
             <div className="absolute inset-x-0 top-0 -z-10 mx-auto h-72 w-72 rounded-full bg-[radial-gradient(circle,rgba(46,165,242,0.18),transparent_68%)] blur-3xl" />
             <div className="absolute -right-16 top-16 -z-10 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(126,219,74,0.22),transparent_65%)] blur-3xl" />
 
             <div className="mx-auto max-w-4xl">
               <p className="inline-flex items-center rounded-full border border-[rgba(46,165,242,0.18)] bg-white/85 px-4 py-2 text-sm font-semibold tracking-[0.14em] text-[var(--brand-navy)] uppercase shadow-[var(--shadow-soft)]">
-                Free 1:1 Digital Marketing Consultation
+                <span className="mr-2 inline-flex h-5 w-5 items-center justify-center rounded-full bg-white">
+                  <Image
+                    src="/logo.png"
+                    alt="Marketing Uplift logo"
+                    width={14}
+                    height={14}
+                    className="h-3.5 w-3.5 object-contain"
+                  />
+                </span>
+                <span className="text-[12px] font-semibold tracking-[0.16em] text-black">
+                  Free 1:1 Digital Marketing Consultation
+                </span>
               </p>
               <h1 className="mt-6 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-[var(--brand-navy)] text-balance sm:text-5xl lg:text-6xl">
                 Get More Customers From Online - Not Just Likes &amp; Views
               </h1>
-              <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-[var(--muted)] text-balance sm:text-xl">
-                Stop posting randomly. Get a clear plan that actually brings
-                customers.
+              <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-black text-balance sm:text-xl">
+                <strong>Stop posting without direction.</strong> Get a clear,
+                practical digital marketing plan built to turn your online
+                presence into <strong>real inquiries, leads, and customers</strong>.
               </p>
-              <div className="mx-auto mt-6 max-w-3xl space-y-4 text-base leading-8 text-[var(--muted)] sm:text-lg">
+              <div className="mx-auto mt-6 max-w-3xl space-y-4 text-base leading-8 text-black sm:text-lg">
                 <p>
-                  I help businesses level up their brand online through smart
-                  digital marketing strategies.
+                  I help business owners <strong>strengthen their brand</strong>,
+                  sharpen their message, and use digital marketing with a
+                  strategy that is focused on <strong>growth, not guesswork</strong>.
                 </p>
                 <p>
-                  This free 1:1 consultation is designed for business owners who
-                  are not getting proper results online. During the consultation,
-                  I will analyze your current marketing and provide a customized
-                  marketing plan tailored specifically for your business -
-                  completely free.
+                  This <strong>free 1:1 consultation</strong> is for businesses
+                  that are active online but not seeing the results they deserve.
+                  I will review your current marketing, identify what is holding
+                  you back, and give you a <strong>customized action plan</strong>
+                  tailored to your business.
                 </p>
+              </div>
+
+              <div className="mx-auto mt-7 max-w-3xl text-left">
+                <ul className="grid gap-3 text-base font-medium leading-7 text-black sm:grid-cols-3">
+                  {[
+                    "Understand what is not working",
+                    "Fix weak messaging and targeting",
+                    "Get a clear plan to attract buyers",
+                  ].map((item) => (
+                    <li
+                      key={item}
+                      className="rounded-2xl border border-black/8 bg-white/80 px-4 py-3 shadow-[var(--shadow-soft)]"
+                    >
+                      <strong>{item}</strong>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
               <div className="mt-8 flex justify-center">
@@ -372,9 +285,20 @@ export function LandingPage() {
               <p className="text-sm font-semibold tracking-[0.2em] text-white/65 uppercase">
                 Book your consultation
               </p>
-              <h2 className="mt-4 font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl">
-                Book Your FREE 1:1 Consultation Call
-              </h2>
+              <div className="mt-4 flex items-center gap-4">
+                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-white/10 ring-1 ring-white/12 backdrop-blur">
+                  <Image
+                    src="/logo.png"
+                    alt="Marketing Uplift logo"
+                    width={34}
+                    height={34}
+                    className="h-8 w-8 object-contain"
+                  />
+                </div>
+                <h2 className="font-[family-name:var(--font-display)] text-3xl font-semibold tracking-tight sm:text-4xl">
+                  Book Your FREE 1:1 Consultation Call
+                </h2>
+              </div>
               <p className="mt-5 text-base leading-7 text-white/78">
                 Fill up the form below and we&apos;ll contact you with the next
                 steps.
@@ -382,9 +306,9 @@ export function LandingPage() {
 
               <div className="mt-8 space-y-4">
                 {[
-                  "Built for Nepal-based business owners who want more customers",
-                  "Simple and practical advice based on your actual business",
-                  "Customized marketing plan shared with you for free",
+                  "Your lead stays inside Flodesk",
+                  "Flodesk automation still triggers after submission",
+                  "Safe redirect to the thank-you page after success",
                 ].map((item) => (
                   <div
                     key={item}
@@ -396,169 +320,12 @@ export function LandingPage() {
               </div>
             </div>
 
-            <div className="rounded-[2rem] border bg-white/94 p-8 shadow-[var(--shadow-strong)] backdrop-blur sm:p-10">
-              <form noValidate onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <FormField
-                    label="Full Name"
-                    name="fullName"
-                    placeholder="Enter your full name"
-                    value={values.fullName}
-                    onChange={handleChange}
-                    error={errors.fullName}
-                    required
-                  />
-                  <FormField
-                    label="Email"
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={values.email}
-                    onChange={handleChange}
-                    error={errors.email}
-                    required
-                  />
-                </div>
-
-                <div className="grid gap-5 sm:grid-cols-2">
-                  <FormField
-                    label="WhatsApp Number"
-                    name="whatsapp"
-                    placeholder="Enter your WhatsApp number"
-                    value={values.whatsapp}
-                    onChange={handleChange}
-                    error={errors.whatsapp}
-                    required
-                  />
-                  <FormField
-                    label="Business Name"
-                    name="businessName"
-                    placeholder="Enter your business name"
-                    value={values.businessName}
-                    onChange={handleChange}
-                    error={errors.businessName}
-                    required
-                  />
-                </div>
-
-                <FormField
-                  label="Website or Facebook Page Link"
-                  name="website"
-                  placeholder="Paste your website or Facebook page link"
-                  value={values.website}
-                  onChange={handleChange}
-                  error={errors.website}
-                  required
-                />
-
-                <FormTextArea
-                  label="Message for Us"
-                  name="message"
-                  placeholder="Share anything important about your business"
-                  value={values.message}
-                  onChange={handleChange}
-                  error={errors.message}
-                />
-
-                {submitError ? (
-                  <div className="rounded-[1.1rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
-                    {submitError}
-                  </div>
-                ) : null}
-
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex w-full items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--brand-blue),var(--brand-green))] px-7 py-4 text-base font-semibold text-white shadow-[var(--shadow-button)] transition-transform duration-200 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-80"
-                >
-                  {isSubmitting
-                    ? "Submitting..."
-                    : "Submit & Book My Free Call"}
-                </button>
-              </form>
+            <div className="rounded-[2rem] border bg-white/94 p-4 shadow-[var(--shadow-strong)] backdrop-blur sm:p-6 lg:p-8">
+              <FlodeskInlineForm />
             </div>
           </div>
         </div>
       </section>
     </main>
-  );
-}
-
-type SharedFieldProps = {
-  label: string;
-  name: keyof FormValues;
-  placeholder: string;
-  value: string;
-  onChange: (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => void;
-  error?: string;
-  required?: boolean;
-};
-
-function FormField({
-  label,
-  name,
-  placeholder,
-  value,
-  onChange,
-  error,
-  required,
-  type = "text",
-}: SharedFieldProps & { type?: React.HTMLInputTypeAttribute }) {
-  return (
-    <label className="block">
-      <span className="mb-2 block text-sm font-semibold text-[var(--brand-navy)]">
-        {label}
-        {required ? " *" : ""}
-      </span>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        aria-invalid={error ? "true" : "false"}
-        aria-describedby={error ? `${name}-error` : undefined}
-        className="w-full rounded-[1.2rem] border bg-white px-4 py-3.5 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--brand-blue)] focus:ring-4 focus:ring-[rgba(46,165,242,0.12)]"
-      />
-      {error ? (
-        <p id={`${name}-error`} className="mt-2 text-sm text-red-600">
-          {error}
-        </p>
-      ) : null}
-    </label>
-  );
-}
-
-function FormTextArea({
-  label,
-  name,
-  placeholder,
-  value,
-  onChange,
-  error,
-}: SharedFieldProps) {
-  return (
-    <label className="block">
-      <span className="mb-2 block text-sm font-semibold text-[var(--brand-navy)]">
-        {label}
-      </span>
-      <textarea
-        name={name}
-        value={value}
-        onChange={onChange}
-        placeholder={placeholder}
-        rows={5}
-        aria-invalid={error ? "true" : "false"}
-        aria-describedby={error ? `${name}-error` : undefined}
-        className="w-full rounded-[1.2rem] border bg-white px-4 py-3.5 text-sm text-[var(--foreground)] outline-none transition focus:border-[var(--brand-blue)] focus:ring-4 focus:ring-[rgba(46,165,242,0.12)]"
-      />
-      {error ? (
-        <p id={`${name}-error`} className="mt-2 text-sm text-red-600">
-          {error}
-        </p>
-      ) : null}
-    </label>
   );
 }

@@ -1,9 +1,10 @@
 import Image from "next/image";
+import { VimeoLitePlayer } from "@/components/vimeo-lite-player";
 
 export default function ThanksPage() {
   return (
     <main className="flex min-h-screen items-center px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto w-full max-w-4xl rounded-[2rem] border border-white/80 bg-white/92 p-8 text-center shadow-[var(--shadow-strong)] backdrop-blur sm:p-10 lg:p-12">
+      <div className="mx-auto w-full max-w-5xl rounded-[2rem] border border-white/80 bg-white/92 p-6 text-center shadow-[var(--shadow-strong)] backdrop-blur sm:p-10 lg:p-12">
         <Image
           src="/logo.png"
           alt="Marketing Uplift logo"
@@ -16,12 +17,15 @@ export default function ThanksPage() {
           Thank you
         </p>
         <h1 className="mt-4 font-[family-name:var(--font-display)] text-4xl font-semibold tracking-tight text-[var(--brand-navy)] sm:text-5xl">
-          Your consultation request has been received
+          Wait... watch this video before you go
         </h1>
         <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[var(--muted)]">
-          Thank you for filling up the form. We will review your information and
-          contact you with the next steps for your free 1:1 consultation.
+          Before your consultation, please watch this short video so you know
+          what to do next.
         </p>
+
+        <VimeoLitePlayer />
+
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           {[
             "We review your submitted business details",
@@ -38,6 +42,15 @@ export default function ThanksPage() {
             </div>
           ))}
         </div>
+
+        <a
+          href="https://wa.me/9840034653"
+          target="_blank"
+          rel="noreferrer"
+          className="mt-10 inline-flex items-center justify-center rounded-full bg-[linear-gradient(135deg,var(--brand-blue),var(--brand-green))] px-8 py-4 text-base font-semibold text-white shadow-[var(--shadow-button)] transition-transform duration-200 hover:-translate-y-0.5"
+        >
+          Chat with me on WhatsApp
+        </a>
       </div>
     </main>
   );
